@@ -30,13 +30,14 @@ app.get("/week", async (req, res) => {
 
     //const dish = $("span.fs14lh1-5.ff2:contains(',')").text().trim();
     // console.log(dish);
-    let reg = new RegExp("[a-zA-Z0-9,:]");
+    let reg = new RegExp("[a-zA-Z:]");
     function filterABC() {
       return reg.test($(this).text());
     }
 
+    //get all dishes for each day
     const dishes = [];
-    $("div.imTALeft > span.fs14lh1-5")
+    $("span.fs14lh1-5.ff2")
       .filter(filterABC)
       .each(function () {
         const food = $(this).text().trim();
@@ -44,7 +45,24 @@ app.get("/week", async (req, res) => {
           food,
         });
       });
-    // console.log(dishes);
+    //console.log(dishes);
+
+    //remove not needed information
+    const modDishes = dishes.slice(4);
+    // console.log(modDishes);
+
+    //find indexOf element
+
+    const targetFood = "Alle Gerichte auch zum Mitnehmen !!!";
+    const index = modDishes.findIndex((food) => food.food === targetFood);
+
+    if (index !== -1) {
+      console.log(`Found ${targetFood} at index ${index}`);
+    } else {
+      console.log(`${targetFood} not found`);
+    }
+    const modDishes2 = modDishes.slice(0, index);
+    console.log(modDishes2);
 
     //days of week
     const days = [
@@ -73,7 +91,7 @@ app.get("/week", async (req, res) => {
         food[index].week = days[z];
       }
     }
-    console.log(food);
+    //console.log(food);
   } catch (error) {
     console.error(error);
   }
