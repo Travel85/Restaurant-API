@@ -35,7 +35,6 @@ app.get("/week", async (req, res) => {
         const food = $(this).text().trim();
         dishes.push(food);
       });
-    //console.log(dishes);
 
     //remove not needed information
     const modDishes = dishes.slice(4);
@@ -61,7 +60,7 @@ app.get("/week", async (req, res) => {
     let weekDish = [];
 
     //merge elements of days to previous line, if regexes match
-    for (let index = 0; index < modDishes2.length; index++) {
+    /*    for (let index = 0; index < modDishes2.length; index++) {
       if (regDay.test(modDishes2[index])) {
         weekDish[index] = modDishes2[index];
       } else if (regRice.test(modDishes2[index])) {
@@ -69,7 +68,9 @@ app.get("/week", async (req, res) => {
       } else {
         weekDish[index] = modDishes2[index];
       }
-    }
+    } */
+
+    parseFood(modDishes2, weekDish);
 
     //removing empty elements:
     let weekDish2 = [];
@@ -77,24 +78,23 @@ app.get("/week", async (req, res) => {
     parseFood(weekDish, weekDish2);
     let weekDish3 = [];
     parseFood(weekDish2, weekDish3);
-    //console.log(weekDish3);
+
     let weekDish4 = [];
     parseFood(weekDish3, weekDish4);
 
     const filteredArray = weekDish4.filter(
       (element) => element != null || element != undefined
     );
+
+    //remove empty spaces
     filteredArray[0] = filteredArray[0].replace(/\s+/g, " ");
 
-    //console.log(filteredArray);
     const regWeekDays =
       /(Montag:)|(Dienstag:)|(Mittwoch:)|(Donnerstag:)|(Freitag:)/gi;
     const trimmedArray = filteredArray.map((element) => {
-      // Replace 'tag' or 'Mittwoch' with a space
+      // Remove days
       return element.replace(regWeekDays, "").trim();
     });
-
-    // console.log(trimmedArray);
 
     function parseFood(foodArray, emptyArray) {
       for (let index = 0; index < foodArray.length; index++) {
@@ -144,7 +144,6 @@ app.get("/week", async (req, res) => {
       foodWeekOne[0].week[key] = trimmedArray[index];
     });
 
-    //console.log(foodWeekOne);
     res.json(foodWeekOne);
   } catch (error) {
     console.error(error);
@@ -152,5 +151,5 @@ app.get("/week", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`API listening on port ${port}`);
 });
